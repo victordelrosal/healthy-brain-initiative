@@ -331,6 +331,14 @@
                 <p class="counter-subtext">Families from Junior Infants to 6th Class</p>
             </div>
 
+            <!-- Social Proof: Who has joined -->
+            <div class="social-proof" id="social-proof">
+                <h4>Families who've made the commitment</h4>
+                <div class="pledge-names" id="pledge-names">
+                    <!-- Names loaded dynamically -->
+                </div>
+            </div>
+
             <!-- What Works -->
             <div class="what-works">
                 <h3>What the Research Says Works</h3>
@@ -444,52 +452,12 @@
                 <!-- Success State -->
                 <div id="pledge-success" class="pledge-success" style="display: none;">
 
-                    <!-- Shareable Badge -->
-                    <div class="badge-container" id="shareable-badge">
-                        <div class="badge-card">
-                            <div class="badge-logo-display">
-                                <img src="img/badge-transparent.png" alt="Healthy Brains Initiative" class="badge-logo-img">
-                            </div>
-                            <div class="badge-commitment">
-                                <p class="badge-label">I commit to</p>
-                                <p class="badge-text">No smartphone until secondary school</p>
-                            </div>
-                            <div class="badge-signature">
-                                <div id="signature-display"></div>
-                            </div>
-                            <div class="badge-footer">
-                                <span class="badge-location">Newport, Co. Mayo</span>
-                                <span class="badge-year">2026</span>
-                            </div>
-                        </div>
-                        <p class="badge-instruction">Screenshot this badge to share your commitment</p>
-                    </div>
-
                     <div class="success-message">
                         <h3>You've joined <span id="updated-count">48</span> Newport families</h3>
                         <p>Thank you for protecting your child's developing brain.</p>
                     </div>
 
-                    <!-- Additional Behaviors (shown after commitment) -->
-                    <div class="success-extras">
-                        <h4>Want to go further? Research shows these also help:</h4>
-                        <ul class="extras-list">
-                            <li>
-                                <span class="extra-icon">📵</span>
-                                <span><strong>No social media until 16</strong> · Ireland's digital age of consent exists for a reason</span>
-                            </li>
-                            <li>
-                                <span class="extra-icon">🏫</span>
-                                <span><strong>Support phone-free schools</strong> · Learning requires sustained attention</span>
-                            </li>
-                            <li>
-                                <span class="extra-icon">👀</span>
-                                <span><strong>Model it yourself</strong> · Your screen habits matter 4x more than rules</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Optional: Stay in touch -->
+                    <!-- Optional: Stay in touch (shown first) -->
                     <div class="success-signin" id="signin-section">
                         <h4>Stay in touch</h4>
                         <p>Get occasional updates on the initiative's progress and tips for screen-free parenting.</p>
@@ -522,6 +490,46 @@
                         </div>
 
                         <p class="signin-note privacy-notice">This step is optional. We'll send occasional updates (a few times per year, max). No spam, ever. Unsubscribe anytime.</p>
+                    </div>
+
+                    <!-- Shareable Badge (shown after contact info) -->
+                    <div class="badge-container" id="shareable-badge" style="display: none;">
+                        <div class="badge-card">
+                            <div class="badge-logo-display">
+                                <img src="img/badge-transparent.png" alt="Healthy Brains Initiative" class="badge-logo-img">
+                            </div>
+                            <div class="badge-commitment">
+                                <p class="badge-label">I commit to</p>
+                                <p class="badge-text">No smartphone until secondary school</p>
+                            </div>
+                            <div class="badge-signature">
+                                <div id="signature-display"></div>
+                            </div>
+                            <div class="badge-footer">
+                                <span class="badge-location">Newport, Co. Mayo</span>
+                                <span class="badge-year">2026</span>
+                            </div>
+                        </div>
+                        <p class="badge-instruction">Screenshot this badge to share your commitment</p>
+                    </div>
+
+                    <!-- Additional Behaviors (shown after commitment) -->
+                    <div class="success-extras">
+                        <h4>Want to go further? Research shows these also help:</h4>
+                        <ul class="extras-list">
+                            <li>
+                                <span class="extra-icon">📵</span>
+                                <span><strong>No social media until 16</strong> · Ireland's digital age of consent exists for a reason</span>
+                            </li>
+                            <li>
+                                <span class="extra-icon">🏫</span>
+                                <span><strong>Support phone-free schools</strong> · Learning requires sustained attention</span>
+                            </li>
+                            <li>
+                                <span class="extra-icon">👀</span>
+                                <span><strong>Model it yourself</strong> · Your screen habits matter 4x more than rules</span>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="success-share">

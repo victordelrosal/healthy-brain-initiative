@@ -5,7 +5,7 @@
  */
 
 // Firebase imports
-import { savePledgeToFirebase, getPledgeCount, subscribeToPledgeCount, signInWithGoogle, linkPledgeToUser, onAuthChange, saveEmailSubscriber, addEmailToPledge } from './firebase-config.js';
+import { savePledgeToFirebase, getPledgeCount, subscribeToPledgeCount, signInWithGoogle, linkPledgeToUser, onAuthChange, saveEmailSubscriber, addEmailToPledge, getPublicPledges } from './firebase-config.js';
 
 // Base count (existing pledges before going live)
 const BASE_PLEDGE_COUNT = 0;
@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Subscribe to real-time pledge count updates
     initRealtimeCounter();
+
+    // Load public pledge names for social proof
+    loadPublicPledgeNames();
 });
 
 /* ===========================
@@ -33,23 +36,19 @@ document.addEventListener('DOMContentLoaded', function() {
    =========================== */
 
 async function initRealtimeCounter() {
-    console.log('initRealtimeCounter: Starting...');
     try {
         // Get initial count from Firebase
-        console.log('initRealtimeCounter: Calling getPledgeCount...');
         const firebaseCount = await getPledgeCount();
-        console.log('initRealtimeCounter: Got count:', firebaseCount);
         currentPledgeCount = BASE_PLEDGE_COUNT + firebaseCount;
         syncAllCounters();
 
         // Subscribe to real-time updates
         subscribeToPledgeCount((count) => {
-            console.log('subscribeToPledgeCount callback: count =', count);
             currentPledgeCount = BASE_PLEDGE_COUNT + count;
             syncAllCounters();
         });
     } catch (error) {
-        console.error('initRealtimeCounter ERROR:', error);
+        console.error('Error initializing counter:', error);
         // Fallback to localStorage count
         const localPledges = JSON.parse(localStorage.getItem('healthyBrain_pledges') || '[]');
         currentPledgeCount = BASE_PLEDGE_COUNT + localPledges.length;
@@ -281,7 +280,7 @@ async function handleEmailSubmit(e) {
 }
 
 /**
- * Show contact success message
+ * Show contact success message and reveal badge
  */
 function showContactSuccess(email) {
     const signInSection = document.getElementById('signin-section');
@@ -293,6 +292,13 @@ function showContactSuccess(email) {
                 <p class="signed-in-note">We'll send occasional updates to ${email}. No spam, ever.</p>
             </div>
         `;
+    }
+
+    // Show the shareable badge
+    const badge = document.getElementById('shareable-badge');
+    if (badge) {
+        badge.style.display = 'block';
+        badge.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 }
 
@@ -365,14 +371,11 @@ function getTotalPledgeCount() {
  */
 function syncAllCounters() {
     const count = getTotalPledgeCount();
-    console.log('syncAllCounters: count =', count, 'currentPledgeCount =', currentPledgeCount);
 
     COUNTER_IDS.forEach(id => {
         const element = document.getElementById(id);
-        console.log('syncAllCounters: element', id, '=', element ? 'found' : 'NOT FOUND');
         if (element) {
             element.textContent = count;
-            console.log('syncAllCounters: set', id, 'to', count);
         }
     });
 }
@@ -549,4 +552,43 @@ function isInViewport(element) {
         rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
         rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
+}
+
+/* ===========================
+   SOCIAL PROOF
+   =========================== */
+
+/**
+ * Load and display public pledge names for social proof
+ */
+async function loadPublicPledgeNames() {
+    const container = document.getElementById('pledge-names');
+    const socialProofSection = document.getElementById('social-proof');
+
+    if (!container || !socialProofSection) return;
+
+    try {
+        const pledges = await getPublicPledges(20);
+
+        if (pledges.length === 0) {
+            // Hide section if no pledges yet
+            socialProofSection.style.display = 'none';
+            return;
+        }
+
+        // Show section
+        socialProofSection.style.display = 'block';
+
+        // Create name tags
+        const namesHTML = pledges.map(pledge => {
+            const classInfo = pledge.childClass ? ` <span class="pledge-class">(${pledge.childClass})</span>` : '';
+            return `<span class="pledge-name-tag">${pledge.displayName}${classInfo}</span>`;
+        }).join('');
+
+        container.innerHTML = namesHTML;
+
+    } catch (error) {
+        console.error('Error loading public pledges:', error);
+        socialProofSection.style.display = 'none';
+    }
 }
