@@ -33,19 +33,23 @@ document.addEventListener('DOMContentLoaded', function() {
    =========================== */
 
 async function initRealtimeCounter() {
+    console.log('initRealtimeCounter: Starting...');
     try {
         // Get initial count from Firebase
+        console.log('initRealtimeCounter: Calling getPledgeCount...');
         const firebaseCount = await getPledgeCount();
+        console.log('initRealtimeCounter: Got count:', firebaseCount);
         currentPledgeCount = BASE_PLEDGE_COUNT + firebaseCount;
         syncAllCounters();
 
         // Subscribe to real-time updates
         subscribeToPledgeCount((count) => {
+            console.log('subscribeToPledgeCount callback: count =', count);
             currentPledgeCount = BASE_PLEDGE_COUNT + count;
             syncAllCounters();
         });
     } catch (error) {
-        console.log('Firebase not available, using local count');
+        console.error('initRealtimeCounter ERROR:', error);
         // Fallback to localStorage count
         const localPledges = JSON.parse(localStorage.getItem('healthyBrain_pledges') || '[]');
         currentPledgeCount = BASE_PLEDGE_COUNT + localPledges.length;

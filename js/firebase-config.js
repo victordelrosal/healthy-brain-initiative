@@ -173,12 +173,15 @@ export async function savePledgeToFirebase(pledgeData) {
  */
 export async function getPledgeCount() {
     try {
+        console.log('getPledgeCount: Starting query...');
         // Query public pledges (required by security rules)
         const q = query(pledgesCollection, where('isPublic', '==', true));
+        console.log('getPledgeCount: Query created, fetching docs...');
         const snapshot = await getDocs(q);
+        console.log('getPledgeCount: Got', snapshot.size, 'pledges');
         return snapshot.size;
     } catch (error) {
-        console.error('Error getting pledge count:', error);
+        console.error('getPledgeCount ERROR:', error);
         return 0;
     }
 }
