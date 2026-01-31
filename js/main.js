@@ -198,8 +198,8 @@ function initPledgeForm() {
         // Also save locally as backup
         savePledgeLocally(formData);
 
-        // Show success message with signature
-        showSuccessMessage(formData.signatureSVG);
+        // Show success message with signature and social proof
+        showSuccessMessage(formData.signatureSVG, formData.displayName);
 
         // Reset button (though it's hidden now)
         submitBtn.textContent = originalText;
@@ -315,7 +315,7 @@ function savePledgeLocally(data) {
 /**
  * Show success message after form submission
  */
-function showSuccessMessage(signatureSVG) {
+async function showSuccessMessage(signatureSVG, userDisplayName) {
     const form = document.getElementById('pledge-form');
     const success = document.getElementById('pledge-success');
     const updatedCount = document.getElementById('updated-count');
@@ -342,8 +342,40 @@ function showSuccessMessage(signatureSVG) {
             }
         }
 
+        // Load and display social proof names
+        loadSuccessSocialProof(userDisplayName);
+
         // Scroll to success message
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+}
+
+/**
+ * Load social proof names in success state
+ */
+async function loadSuccessSocialProof(userDisplayName) {
+    const container = document.getElementById('success-pledge-names');
+    if (!container) return;
+
+    try {
+        const pledges = await getPublicPledges(15);
+
+        // Build name tags - user first (highlighted), then others
+        let namesHTML = `<span class="pledge-name-tag you">${userDisplayName} (you!)</span>`;
+
+        pledges.forEach(pledge => {
+            // Skip if it's the same as user (might not be in list yet due to timing)
+            if (pledge.displayName !== userDisplayName) {
+                namesHTML += `<span class="pledge-name-tag">${pledge.displayName}</span>`;
+            }
+        });
+
+        container.innerHTML = namesHTML;
+
+    } catch (error) {
+        console.error('Error loading success social proof:', error);
+        // Show just the user if we can't load others
+        container.innerHTML = `<span class="pledge-name-tag you">${userDisplayName} (you!)</span>`;
     }
 }
 
