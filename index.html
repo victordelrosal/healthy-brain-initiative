@@ -484,22 +484,39 @@
                         </ul>
                     </div>
 
-                    <!-- Optional: Sign in to manage pledge -->
+                    <!-- Optional: Stay in touch -->
                     <div class="success-signin" id="signin-section">
-                        <h4>Want to manage your pledge?</h4>
-                        <p>Sign in with Google to save your pledge to your account. You'll be able to update or rescind it later if needed.</p>
-                        <button class="btn btn-google" id="google-signin-btn">
-                            <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
-                                <g transform="matrix(1, 0, 0, 1, 0, 0)">
-                                    <path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/>
-                                    <path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09c1.97 3.92 6.02 6.62 10.71 6.62z"/>
-                                    <path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29v-3.09h-3.98a11.86 11.86 0 000 10.76l3.98-3.09z"/>
-                                    <path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42c-2.07-1.94-4.78-3.13-8.02-3.13-4.69 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/>
-                                </g>
-                            </svg>
-                            <span>Sign in with Google</span>
-                        </button>
-                        <p class="signin-note">This step is optional. Your pledge is already recorded.</p>
+                        <h4>Stay in touch</h4>
+                        <p>Get occasional updates on the initiative's progress and tips for screen-free parenting.</p>
+
+                        <div class="contact-options">
+                            <!-- Email option -->
+                            <form id="email-form" class="email-signup-form">
+                                <div class="email-input-group">
+                                    <input type="email" id="contact-email" name="contact-email" placeholder="Your email address" required>
+                                    <button type="submit" class="btn btn-primary btn-email-submit">Subscribe</button>
+                                </div>
+                            </form>
+
+                            <div class="contact-divider">
+                                <span>or</span>
+                            </div>
+
+                            <!-- Google option -->
+                            <button class="btn btn-google" id="google-signin-btn">
+                                <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+                                    <g transform="matrix(1, 0, 0, 1, 0, 0)">
+                                        <path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/>
+                                        <path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09c1.97 3.92 6.02 6.62 10.71 6.62z"/>
+                                        <path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29v-3.09h-3.98a11.86 11.86 0 000 10.76l3.98-3.09z"/>
+                                        <path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42c-2.07-1.94-4.78-3.13-8.02-3.13-4.69 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/>
+                                    </g>
+                                </svg>
+                                <span>Continue with Google</span>
+                            </button>
+                        </div>
+
+                        <p class="signin-note privacy-notice">This step is optional. We'll send occasional updates (a few times per year, max). No spam, ever. Unsubscribe anytime.</p>
                     </div>
 
                     <div class="success-share">

@@ -23,8 +23,9 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-// Collection reference
+// Collection references
 const pledgesCollection = collection(db, 'pledges');
+const subscribersCollection = collection(db, 'subscribers');
 
 /* ===========================
    AUTHENTICATION
@@ -216,4 +217,41 @@ export function subscribeToPledgeCount(callback) {
     });
 }
 
-export { db, auth, pledgesCollection };
+/**
+ * Save email subscriber to Firestore
+ */
+export async function saveEmailSubscriber(email, pledgeId = null) {
+    try {
+        const docRef = await addDoc(subscribersCollection, {
+            email: email,
+            pledgeId: pledgeId,
+            source: 'website',
+            subscribedAt: new Date().toISOString(),
+            unsubscribed: false
+        });
+        console.log('Subscriber saved with ID:', docRef.id);
+        return { success: true, id: docRef.id };
+    } catch (error) {
+        console.error('Error saving subscriber:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Add email to an existing pledge
+ */
+export async function addEmailToPledge(pledgeId, email) {
+    try {
+        const pledgeRef = doc(db, 'pledges', pledgeId);
+        await updateDoc(pledgeRef, {
+            contactEmail: email,
+            emailAddedAt: new Date().toISOString()
+        });
+        return { success: true };
+    } catch (error) {
+        console.error('Error adding email to pledge:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+export { db, auth, pledgesCollection, subscribersCollection };

@@ -5,7 +5,7 @@
  */
 
 // Firebase imports
-import { savePledgeToFirebase, getPledgeCount, subscribeToPledgeCount, signInWithGoogle, linkPledgeToUser, onAuthChange } from './firebase-config.js';
+import { savePledgeToFirebase, getPledgeCount, subscribeToPledgeCount, signInWithGoogle, linkPledgeToUser, onAuthChange, saveEmailSubscriber, addEmailToPledge } from './firebase-config.js';
 
 // Base count (existing pledges before going live)
 const BASE_PLEDGE_COUNT = 0;
@@ -208,6 +208,12 @@ function initPledgeForm() {
     if (googleSignInBtn) {
         googleSignInBtn.addEventListener('click', handleGoogleSignIn);
     }
+
+    // Set up email form
+    const emailForm = document.getElementById('email-form');
+    if (emailForm) {
+        emailForm.addEventListener('submit', handleEmailSubmit);
+    }
 }
 
 /**
@@ -222,26 +228,67 @@ async function handleGoogleSignIn() {
     const result = await signInWithGoogle();
 
     if (result.success) {
-        // Link the pledge to the user
+        // Link the pledge to the user and save email
         if (currentPledgeId) {
             await linkPledgeToUser(currentPledgeId, result.user.uid, result.user.email);
+            await addEmailToPledge(currentPledgeId, result.user.email);
         }
 
-        // Update UI to show signed-in state
-        const signInSection = document.getElementById('signin-section');
-        if (signInSection) {
-            signInSection.innerHTML = `
-                <div class="signed-in-confirmation">
-                    <span class="signed-in-icon">✓</span>
-                    <p><strong>Signed in as ${result.user.email}</strong></p>
-                    <p class="signed-in-note">You can manage your pledge anytime by returning to this site.</p>
-                </div>
-            `;
-        }
+        // Also save to subscribers collection
+        await saveEmailSubscriber(result.user.email, currentPledgeId);
+
+        // Update UI to show success state
+        showContactSuccess(result.user.email);
     } else {
         btn.innerHTML = originalText;
         btn.disabled = false;
         console.error('Sign-in failed:', result.error);
+    }
+}
+
+/**
+ * Handle email form submission
+ */
+async function handleEmailSubmit(e) {
+    e.preventDefault();
+
+    const emailInput = document.getElementById('contact-email');
+    const email = emailInput.value.trim();
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+
+    if (!email) return;
+
+    // Show loading state
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Saving...';
+    submitBtn.disabled = true;
+
+    // Save email to subscribers collection (links via pledgeId)
+    const result = await saveEmailSubscriber(email, currentPledgeId);
+
+    if (result.success) {
+        showContactSuccess(email);
+    } else {
+        // Restore button on error
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        console.error('Failed to save email:', result.error);
+    }
+}
+
+/**
+ * Show contact success message
+ */
+function showContactSuccess(email) {
+    const signInSection = document.getElementById('signin-section');
+    if (signInSection) {
+        signInSection.innerHTML = `
+            <div class="signed-in-confirmation">
+                <span class="signed-in-icon">✓</span>
+                <p><strong>You're on the list!</strong></p>
+                <p class="signed-in-note">We'll send occasional updates to ${email}. No spam, ever.</p>
+            </div>
+        `;
     }
 }
 

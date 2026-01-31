@@ -29,16 +29,22 @@ service cloud.firestore {
       allow read: if resource.data.isPublic == true
                   || (request.auth != null && resource.data.userId == request.auth.uid);
 
-      // Update: Authenticated users can link their pledge or rescind it
+      // Update: Authenticated users can link their pledge, add email, or rescind
       allow update: if request.auth != null
                     && (
-                      // First-time linking (no userId yet, adding userId)
+                      // First-time linking (no userId yet, adding userId and optionally email)
                       (
                         !('userId' in resource.data)
                         && request.resource.data.userId == request.auth.uid
-                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['userId', 'userEmail', 'linkedAt'])
+                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['userId', 'userEmail', 'linkedAt', 'contactEmail', 'emailAddedAt'])
                       )
-                      // Or owner rescinding their own pledge
+                      // Owner adding email to their pledge
+                      || (
+                        resource.data.userId == request.auth.uid
+                        && !('contactEmail' in resource.data)
+                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['contactEmail', 'emailAddedAt'])
+                      )
+                      // Owner rescinding their own pledge
                       || (
                         resource.data.userId == request.auth.uid
                         && request.resource.data.rescinded == true
@@ -54,6 +60,28 @@ service cloud.firestore {
     match /stats/{statId} {
       allow read: if true;
       allow write: if false; // Only server-side updates
+    }
+
+    // Subscribers collection (email list)
+    match /subscribers/{subscriberId} {
+      // Validate subscriber data
+      function isValidSubscriber() {
+        let data = request.resource.data;
+        return data.email is string
+            && data.email.size() >= 5
+            && data.email.size() <= 254
+            && data.email.matches('.*@.*\\..*');
+      }
+
+      // Anyone can subscribe (with validation)
+      allow create: if isValidSubscriber()
+                    && !('unsubscribed' in request.resource.data && request.resource.data.unsubscribed == true);
+
+      // No client reads (privacy)
+      allow read: if false;
+
+      // No client updates or deletes
+      allow update, delete: if false;
     }
   }
 }

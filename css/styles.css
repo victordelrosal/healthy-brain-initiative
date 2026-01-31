@@ -1423,6 +1423,77 @@ blockquote {
     margin-bottom: 0;
 }
 
+.privacy-notice {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-sm);
+    background: rgba(0, 107, 61, 0.05);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+}
+
+/* Contact Options (Email + Google) */
+.contact-options {
+    margin: var(--spacing-md) 0;
+}
+
+.email-signup-form {
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+.email-input-group {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.email-input-group input[type="email"] {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 1rem;
+    font-family: var(--font-body);
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition: border-color 0.2s;
+}
+
+.email-input-group input[type="email"]:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.btn-email-submit {
+    padding: var(--spacing-sm) var(--spacing-md);
+    white-space: nowrap;
+}
+
+.contact-divider {
+    display: flex;
+    align-items: center;
+    margin: var(--spacing-md) 0;
+    color: var(--color-text-muted);
+    font-size: 0.85rem;
+}
+
+.contact-divider::before,
+.contact-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+}
+
+.contact-divider span {
+    padding: 0 var(--spacing-md);
+}
+
+.email-success-message {
+    color: var(--color-success);
+    font-weight: 500;
+    padding: var(--spacing-md);
+    background: rgba(0, 107, 61, 0.1);
+    border-radius: var(--radius-md);
+}
+
 .signed-in-confirmation {
     text-align: center;
 }
