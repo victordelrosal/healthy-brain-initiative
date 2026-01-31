@@ -365,11 +365,14 @@ function getTotalPledgeCount() {
  */
 function syncAllCounters() {
     const count = getTotalPledgeCount();
+    console.log('syncAllCounters: count =', count, 'currentPledgeCount =', currentPledgeCount);
 
     COUNTER_IDS.forEach(id => {
         const element = document.getElementById(id);
+        console.log('syncAllCounters: element', id, '=', element ? 'found' : 'NOT FOUND');
         if (element) {
             element.textContent = count;
+            console.log('syncAllCounters: set', id, 'to', count);
         }
     });
 }
