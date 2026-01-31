@@ -8,7 +8,7 @@
 import { savePledgeToFirebase, getPledgeCount, subscribeToPledgeCount } from './firebase-config.js';
 
 // Base count (existing pledges before going live)
-const BASE_PLEDGE_COUNT = 47;
+const BASE_PLEDGE_COUNT = 0;
 
 // Track real-time count
 let currentPledgeCount = BASE_PLEDGE_COUNT;
