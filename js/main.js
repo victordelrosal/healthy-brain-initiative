@@ -352,7 +352,7 @@ function showSuccessMessage(signatureSVG) {
    =========================== */
 
 // Counter element IDs
-const COUNTER_IDS = ['hero-count', 'nav-count', 'family-count', 'updated-count'];
+const COUNTER_IDS = ['hero-count', 'nav-count', 'family-count', 'updated-count', 'mobile-cta-count'];
 
 function initCounters() {
     syncAllCounters();
@@ -455,14 +455,29 @@ function animateNumber(element, start, end, duration) {
 
 function initNavScroll() {
     const nav = document.querySelector('.nav-sticky');
+    const mobileCta = document.getElementById('mobile-sticky-cta');
+    const hero = document.querySelector('.hero');
+
     if (!nav) return;
 
-    // Add shadow on scroll
+    // Get hero height for mobile CTA trigger
+    const heroHeight = hero ? hero.offsetHeight : 500;
+
+    // Add shadow on scroll + show/hide mobile CTA
     window.addEventListener('scroll', function() {
         if (window.scrollY > 100) {
             nav.classList.add('nav-scrolled');
         } else {
             nav.classList.remove('nav-scrolled');
+        }
+
+        // Show mobile CTA after scrolling past hero
+        if (mobileCta) {
+            if (window.scrollY > heroHeight * 0.7) {
+                mobileCta.classList.add('visible');
+            } else {
+                mobileCta.classList.remove('visible');
+            }
         }
     });
 }

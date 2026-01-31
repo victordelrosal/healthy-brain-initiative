@@ -489,6 +489,72 @@ blockquote {
     }
 }
 
+/* Mobile Sticky CTA */
+.mobile-sticky-cta {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-sticky-cta {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1001;
+        padding: 0.75rem 1rem;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.95) 100%);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .mobile-sticky-cta.visible {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .mobile-sticky-cta-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .mobile-sticky-cta .cta-text {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--color-text);
+    }
+
+    .mobile-sticky-cta .cta-count {
+        color: var(--color-primary);
+    }
+
+    .mobile-sticky-cta .btn-cta {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        border-radius: 100px;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(26, 95, 74, 0.3);
+        transition: all 0.2s ease;
+    }
+
+    .mobile-sticky-cta .btn-cta:hover,
+    .mobile-sticky-cta .btn-cta:active {
+        background: var(--color-primary-dark);
+        transform: scale(1.02);
+    }
+}
+
 /* ===========================
    SECTIONS
    =========================== */
