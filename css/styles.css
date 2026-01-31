@@ -471,9 +471,16 @@ blockquote {
 }
 
 .btn-nav {
-    padding: var(--spacing-xs) var(--spacing-md);
+    padding: 0.5rem 1.25rem;
     font-size: 0.85rem;
     margin-left: var(--spacing-sm);
+    border-radius: 100px;
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn-nav:hover {
+    background-color: var(--color-primary-dark);
 }
 
 @media (max-width: 768px) {
