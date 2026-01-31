@@ -107,15 +107,12 @@ function initPledgeForm() {
             return;
         }
 
-        // Get commitment checkboxes
+        // Get the main commitment checkbox
         const commit1 = form.querySelector('[name="commit-1"]');
-        const commit2 = form.querySelector('[name="commit-2"]');
-        const commit3 = form.querySelector('[name="commit-3"]');
-        const commit4 = form.querySelector('[name="commit-4"]');
 
-        // Check at least one commitment is selected
-        if (!commit1.checked && !commit2.checked && !commit3.checked && !commit4.checked) {
-            alert('Please select at least one commitment.');
+        // Check the commitment is selected
+        if (!commit1.checked) {
+            alert('Please check the commitment box to proceed.');
             return;
         }
 
@@ -130,12 +127,7 @@ function initPledgeForm() {
             displayName: isPublic ? fullName : getPrivateDisplayName(fullName),
             isPublic: isPublic,
             childClass: document.getElementById('child-class').value,
-            commitments: {
-                noSmartphone: commit1.checked,
-                noSocialMedia: commit2.checked,
-                phoneFreeSchool: commit3.checked,
-                leadByExample: commit4.checked
-            },
+            commitment: 'No smartphone until secondary school',
             signatureSVG: getSignatureSVG(),
             signatureImage: getSignatureDataURL(),
             timestamp: new Date().toISOString()
