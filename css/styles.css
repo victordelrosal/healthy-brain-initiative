@@ -574,6 +574,12 @@ blockquote {
     border-color: rgba(255,255,255,0.3);
 }
 
+.callout-intro {
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-sm);
+    font-weight: 500;
+}
+
 .callout-source {
     font-size: 0.85rem;
     opacity: 0.8;
