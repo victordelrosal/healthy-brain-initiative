@@ -241,7 +241,7 @@ blockquote {
 
 /* Hero Logo */
 .hero-logo-container {
-    margin-bottom: var(--spacing-lg);
+    margin: var(--spacing-lg) 0;
     text-align: center;
 }
 
