@@ -1,7 +1,17 @@
 /**
- * Healthy Brain Initiative — Main JavaScript
+ * Healthy Brains Initiative — Main JavaScript
  * Handles signature pad, form submission, counter sync, and interactions
+ * Now with Firebase integration
  */
+
+// Firebase imports
+import { savePledgeToFirebase, getPledgeCount, subscribeToPledgeCount } from './firebase-config.js';
+
+// Base count (existing pledges before going live)
+const BASE_PLEDGE_COUNT = 47;
+
+// Track real-time count
+let currentPledgeCount = BASE_PLEDGE_COUNT;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize components
@@ -10,7 +20,35 @@ document.addEventListener('DOMContentLoaded', function() {
     initCounters();
     initSmoothScroll();
     initNavScroll();
+
+    // Subscribe to real-time pledge count updates
+    initRealtimeCounter();
 });
+
+/* ===========================
+   REALTIME COUNTER (Firebase)
+   =========================== */
+
+async function initRealtimeCounter() {
+    try {
+        // Get initial count from Firebase
+        const firebaseCount = await getPledgeCount();
+        currentPledgeCount = BASE_PLEDGE_COUNT + firebaseCount;
+        syncAllCounters();
+
+        // Subscribe to real-time updates
+        subscribeToPledgeCount((count) => {
+            currentPledgeCount = BASE_PLEDGE_COUNT + count;
+            syncAllCounters();
+        });
+    } catch (error) {
+        console.log('Firebase not available, using local count');
+        // Fallback to localStorage count
+        const localPledges = JSON.parse(localStorage.getItem('healthyBrain_pledges') || '[]');
+        currentPledgeCount = BASE_PLEDGE_COUNT + localPledges.length;
+        syncAllCounters();
+    }
+}
 
 /* ===========================
    SIGNATURE PAD
@@ -98,7 +136,7 @@ function initPledgeForm() {
     const form = document.getElementById('pledge-form');
     if (!form) return;
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
 
         // Validate signature
@@ -133,48 +171,43 @@ function initPledgeForm() {
             timestamp: new Date().toISOString()
         };
 
-        // In production, this would send to a backend
-        // For now, we'll store in localStorage for demo purposes
-        savePledge(formData);
+        // Show loading state
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Saving...';
+        submitBtn.disabled = true;
+
+        // Save to Firebase
+        const result = await savePledgeToFirebase(formData);
+
+        if (result.success) {
+            console.log('Pledge saved to Firebase:', result.id);
+        } else {
+            console.log('Firebase save failed, saving locally');
+            // Fallback to localStorage
+            savePledgeLocally(formData);
+        }
+
+        // Also save locally as backup
+        savePledgeLocally(formData);
 
         // Show success message with signature
         showSuccessMessage(formData.signatureSVG);
 
-        // Update all counters
-        syncAllCounters();
+        // Reset button (though it's hidden now)
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
     });
 }
 
 /**
- * Save pledge to localStorage (demo) or send to backend (production)
+ * Save pledge to localStorage (backup)
  */
-function savePledge(data) {
-    // For demo: store in localStorage
+function savePledgeLocally(data) {
     let pledges = JSON.parse(localStorage.getItem('healthyBrain_pledges') || '[]');
     pledges.push(data);
     localStorage.setItem('healthyBrain_pledges', JSON.stringify(pledges));
-
-    // Log for demo purposes
-    console.log('Pledge saved:', data);
-    console.log('Signature SVG length:', data.signatureSVG ? data.signatureSVG.length : 0);
-
-    // In production, you would send this to your backend:
-    /*
-    fetch('/api/pledges', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(result => {
-        console.log('Pledge saved to server:', result);
-    })
-    .catch(error => {
-        console.error('Error saving pledge:', error);
-    });
-    */
+    console.log('Pledge saved locally');
 }
 
 /**
@@ -191,9 +224,8 @@ function showSuccessMessage(signatureSVG) {
         success.style.display = 'block';
 
         // Update the count in success message
-        const totalCount = getTotalPledgeCount();
         if (updatedCount) {
-            updatedCount.textContent = totalCount;
+            updatedCount.textContent = currentPledgeCount;
         }
 
         // Display the signature
@@ -226,18 +258,10 @@ function initCounters() {
 }
 
 /**
- * Get total pledge count (demo + simulated base)
+ * Get total pledge count
  */
 function getTotalPledgeCount() {
-    // Get actual pledges from localStorage
-    const pledges = JSON.parse(localStorage.getItem('healthyBrain_pledges') || '[]');
-    const actualCount = pledges.length;
-
-    // For demo purposes, add a base number to make it feel real
-    // In production, this would come from the database
-    const baseCount = 47; // Simulated existing pledges
-
-    return baseCount + actualCount;
+    return currentPledgeCount;
 }
 
 /**
@@ -275,7 +299,7 @@ function animateCountersOnScroll() {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !animated.hero) {
                     animated.hero = true;
-                    animateNumber(heroCounter, 0, targetCount, 1200);
+                    animateNumber(heroCounter, 0, getTotalPledgeCount(), 1200);
                 }
             });
         }, { threshold: 0.5 });
@@ -288,7 +312,7 @@ function animateCountersOnScroll() {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !animated.family) {
                     animated.family = true;
-                    animateNumber(familyCounter, 0, targetCount, 1500);
+                    animateNumber(familyCounter, 0, getTotalPledgeCount(), 1500);
                 }
             });
         }, { threshold: 0.5 });
@@ -369,7 +393,7 @@ function initSmoothScroll() {
 
 function shareWhatsApp() {
     const text = encodeURIComponent(
-        "I've committed to protecting my child's healthy brain development as part of the Newport Healthy Brain Initiative. " +
+        "I've committed to protecting my child's healthy brain development as part of the Healthy Brains Initiative. " +
         "Join other Newport families: " +
         window.location.href
     );

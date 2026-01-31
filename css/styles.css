@@ -386,11 +386,34 @@ blockquote {
 }
 
 .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
     font-family: var(--font-heading);
     font-weight: 700;
     font-size: 1rem;
     color: var(--color-primary);
     text-decoration: none;
+}
+
+.nav-brand:hover {
+    text-decoration: none;
+}
+
+.nav-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+}
+
+.nav-brand span {
+    display: none;
+}
+
+@media (min-width: 480px) {
+    .nav-brand span {
+        display: inline;
+    }
 }
 
 .nav-links {
