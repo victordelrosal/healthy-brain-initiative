@@ -5,13 +5,16 @@
  */
 
 // Firebase imports
-import { savePledgeToFirebase, getPledgeCount, subscribeToPledgeCount } from './firebase-config.js';
+import { savePledgeToFirebase, getPledgeCount, subscribeToPledgeCount, signInWithGoogle, linkPledgeToUser, onAuthChange } from './firebase-config.js';
 
 // Base count (existing pledges before going live)
 const BASE_PLEDGE_COUNT = 0;
 
 // Track real-time count
 let currentPledgeCount = BASE_PLEDGE_COUNT;
+
+// Track the current pledge ID (for linking to auth)
+let currentPledgeId = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize components
@@ -182,6 +185,7 @@ function initPledgeForm() {
 
         if (result.success) {
             console.log('Pledge saved to Firebase:', result.id);
+            currentPledgeId = result.id;
         } else {
             console.log('Firebase save failed, saving locally');
             // Fallback to localStorage
@@ -198,6 +202,47 @@ function initPledgeForm() {
         submitBtn.textContent = originalText;
         submitBtn.disabled = false;
     });
+
+    // Set up Google sign-in button
+    const googleSignInBtn = document.getElementById('google-signin-btn');
+    if (googleSignInBtn) {
+        googleSignInBtn.addEventListener('click', handleGoogleSignIn);
+    }
+}
+
+/**
+ * Handle Google sign-in after pledge submission
+ */
+async function handleGoogleSignIn() {
+    const btn = document.getElementById('google-signin-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span>Signing in...</span>';
+    btn.disabled = true;
+
+    const result = await signInWithGoogle();
+
+    if (result.success) {
+        // Link the pledge to the user
+        if (currentPledgeId) {
+            await linkPledgeToUser(currentPledgeId, result.user.uid, result.user.email);
+        }
+
+        // Update UI to show signed-in state
+        const signInSection = document.getElementById('signin-section');
+        if (signInSection) {
+            signInSection.innerHTML = `
+                <div class="signed-in-confirmation">
+                    <span class="signed-in-icon">✓</span>
+                    <p><strong>Signed in as ${result.user.email}</strong></p>
+                    <p class="signed-in-note">You can manage your pledge anytime by returning to this site.</p>
+                </div>
+            `;
+        }
+    } else {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        console.error('Sign-in failed:', result.error);
+    }
 }
 
 /**

@@ -4,7 +4,8 @@
 
 // Firebase SDK imports (using CDN modules)
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
 // Firebase configuration
 const firebaseConfig = {
@@ -19,9 +20,134 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
 
 // Collection reference
 const pledgesCollection = collection(db, 'pledges');
+
+/* ===========================
+   AUTHENTICATION
+   =========================== */
+
+/**
+ * Sign in with Google
+ */
+export async function signInWithGoogle() {
+    try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const user = result.user;
+        console.log('Signed in:', user.email);
+        return {
+            success: true,
+            user: {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL
+            }
+        };
+    } catch (error) {
+        console.error('Google sign-in error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Sign out
+ */
+export async function signOutUser() {
+    try {
+        await signOut(auth);
+        return { success: true };
+    } catch (error) {
+        console.error('Sign out error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Get current user
+ */
+export function getCurrentUser() {
+    return auth.currentUser;
+}
+
+/**
+ * Subscribe to auth state changes
+ */
+export function onAuthChange(callback) {
+    return onAuthStateChanged(auth, callback);
+}
+
+/**
+ * Link a pledge to an authenticated user (for managing/rescinding later)
+ */
+export async function linkPledgeToUser(pledgeId, userId, userEmail) {
+    try {
+        const pledgeRef = doc(db, 'pledges', pledgeId);
+        await updateDoc(pledgeRef, {
+            userId: userId,
+            userEmail: userEmail,
+            linkedAt: new Date().toISOString()
+        });
+        console.log('Pledge linked to user:', pledgeId, userId);
+        return { success: true };
+    } catch (error) {
+        console.error('Error linking pledge:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+/**
+ * Get user's pledges
+ */
+export async function getUserPledges(userId) {
+    try {
+        const q = query(pledgesCollection, orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const pledges = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.userId === userId) {
+                pledges.push({ id: doc.id, ...data });
+            }
+        });
+        return pledges;
+    } catch (error) {
+        console.error('Error getting user pledges:', error);
+        return [];
+    }
+}
+
+/**
+ * Rescind a pledge (mark as rescinded, don't delete)
+ */
+export async function rescindPledge(pledgeId, userId) {
+    try {
+        const pledgeRef = doc(db, 'pledges', pledgeId);
+        const pledgeSnap = await getDoc(pledgeRef);
+
+        if (!pledgeSnap.exists()) {
+            return { success: false, error: 'Pledge not found' };
+        }
+
+        const pledgeData = pledgeSnap.data();
+        if (pledgeData.userId !== userId) {
+            return { success: false, error: 'Not authorized' };
+        }
+
+        await updateDoc(pledgeRef, {
+            rescinded: true,
+            rescindedAt: new Date().toISOString()
+        });
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error rescinding pledge:', error);
+        return { success: false, error: error.message };
+    }
+}
 
 /**
  * Save a pledge to Firestore
@@ -90,4 +216,4 @@ export function subscribeToPledgeCount(callback) {
     });
 }
 
-export { db, pledgesCollection };
+export { db, auth, pledgesCollection };

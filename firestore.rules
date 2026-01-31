@@ -3,14 +3,51 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Pledges collection
     match /pledges/{pledgeId} {
-      // Anyone can create a pledge (public form)
-      allow create: if true;
+      // Validate pledge data structure
+      function isValidPledge() {
+        let data = request.resource.data;
+        return data.parentName is string
+            && data.parentName.size() >= 2
+            && data.parentName.size() <= 100
+            && data.displayName is string
+            && data.displayName.size() >= 2
+            && data.displayName.size() <= 100
+            && data.isPublic is bool
+            && data.commitment is string
+            && data.timestamp is string
+            // Prevent injecting extra dangerous fields
+            && !('isAdmin' in data)
+            && !('role' in data);
+      }
 
-      // Only read public pledges or by authenticated admin
-      allow read: if resource.data.isPublic == true;
+      // Create: Anyone can create BUT must pass validation
+      allow create: if isValidPledge()
+                    && !('userId' in request.resource.data)  // Can't self-assign userId on create
+                    && !('rescinded' in request.resource.data);  // Can't create as rescinded
 
-      // No updates or deletes from client
-      allow update, delete: if false;
+      // Read: Public pledges or own pledges (if authenticated)
+      allow read: if resource.data.isPublic == true
+                  || (request.auth != null && resource.data.userId == request.auth.uid);
+
+      // Update: Authenticated users can link their pledge or rescind it
+      allow update: if request.auth != null
+                    && (
+                      // First-time linking (no userId yet, adding userId)
+                      (
+                        !('userId' in resource.data)
+                        && request.resource.data.userId == request.auth.uid
+                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['userId', 'userEmail', 'linkedAt'])
+                      )
+                      // Or owner rescinding their own pledge
+                      || (
+                        resource.data.userId == request.auth.uid
+                        && request.resource.data.rescinded == true
+                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rescinded', 'rescindedAt'])
+                      )
+                    );
+
+      // No deletes from client
+      allow delete: if false;
     }
 
     // Stats collection (for aggregate counts)

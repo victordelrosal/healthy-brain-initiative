@@ -1375,6 +1375,76 @@ blockquote {
     line-height: 1.4;
 }
 
+/* Success Sign-in Section */
+.success-signin {
+    background: var(--color-bg-alt);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.success-signin h4 {
+    margin-bottom: var(--spacing-sm);
+}
+
+.success-signin p {
+    font-size: 0.95rem;
+    color: var(--color-text-light);
+}
+
+.btn-google {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: white;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: var(--spacing-md) 0;
+}
+
+.btn-google:hover {
+    background: var(--color-bg-alt);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-google svg {
+    flex-shrink: 0;
+}
+
+.signin-note {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-bottom: 0;
+}
+
+.signed-in-confirmation {
+    text-align: center;
+}
+
+.signed-in-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-success);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+.signed-in-note {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
 /* Success Share */
 .success-share {
     margin-top: var(--spacing-lg);
