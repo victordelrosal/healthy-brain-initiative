@@ -188,23 +188,27 @@ export async function getPledgeCount() {
  */
 export async function getPublicPledges(limitCount = 10) {
     try {
-        const q = query(pledgesCollection, orderBy('createdAt', 'desc'), limit(limitCount));
+        // Must filter by isPublic in query to comply with security rules
+        const q = query(
+            pledgesCollection,
+            where('isPublic', '==', true),
+            orderBy('createdAt', 'desc'),
+            limit(limitCount)
+        );
         const snapshot = await getDocs(q);
         const pledges = [];
         snapshot.forEach(doc => {
             const data = doc.data();
-            if (data.isPublic) {
-                pledges.push({
-                    id: doc.id,
-                    displayName: data.displayName,
-                    childClass: data.childClass,
-                    createdAt: data.createdAt
-                });
-            }
+            pledges.push({
+                id: doc.id,
+                displayName: data.displayName,
+                childClass: data.childClass,
+                createdAt: data.createdAt
+            });
         });
         return pledges;
     } catch (error) {
-        console.error('Error getting pledges:', error);
+        console.error('Error getting public pledges:', error);
         return [];
     }
 }
