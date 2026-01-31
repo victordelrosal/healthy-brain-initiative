@@ -470,6 +470,18 @@ blockquote {
     font-weight: 600;
 }
 
+.btn-nav {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.85rem;
+    margin-left: var(--spacing-sm);
+}
+
+@media (max-width: 768px) {
+    .btn-nav {
+        display: none;
+    }
+}
+
 /* ===========================
    SECTIONS
    =========================== */
