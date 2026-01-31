@@ -379,12 +379,11 @@ function syncAllCounters() {
 
 /**
  * Animate counters when they scroll into view
+ * Only animate if we have a non-zero count (Firebase has loaded)
  */
 function animateCountersOnScroll() {
     const heroCounter = document.getElementById('hero-count');
     const familyCounter = document.getElementById('family-count');
-
-    const targetCount = getTotalPledgeCount();
 
     // Track which counters have animated
     const animated = {
@@ -396,9 +395,11 @@ function animateCountersOnScroll() {
     if (heroCounter) {
         const heroObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !animated.hero) {
+                const count = getTotalPledgeCount();
+                // Only animate if we have data and haven't animated yet
+                if (entry.isIntersecting && !animated.hero && count > 0) {
                     animated.hero = true;
-                    animateNumber(heroCounter, 0, getTotalPledgeCount(), 1200);
+                    animateNumber(heroCounter, 0, count, 1200);
                 }
             });
         }, { threshold: 0.5 });
@@ -409,9 +410,11 @@ function animateCountersOnScroll() {
     if (familyCounter) {
         const familyObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !animated.family) {
+                const count = getTotalPledgeCount();
+                // Only animate if we have data and haven't animated yet
+                if (entry.isIntersecting && !animated.family && count > 0) {
                     animated.family = true;
-                    animateNumber(familyCounter, 0, getTotalPledgeCount(), 1500);
+                    animateNumber(familyCounter, 0, count, 1500);
                 }
             });
         }, { threshold: 0.5 });
