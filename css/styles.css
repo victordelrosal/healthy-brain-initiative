@@ -239,6 +239,34 @@ blockquote {
     align-items: center;
 }
 
+/* Hero Logo */
+.hero-logo-container {
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}
+
+.hero-logo {
+    width: 160px;
+    height: auto;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.3));
+    animation: logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@media (min-width: 768px) {
+    .hero-logo {
+        width: 200px;
+    }
+}
+
 .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -1244,6 +1272,18 @@ blockquote {
     margin: 0 auto;
     box-shadow: var(--shadow-lg);
     text-align: center;
+}
+
+.badge-logo-display {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.badge-logo-img {
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
 }
 
 .badge-header {
