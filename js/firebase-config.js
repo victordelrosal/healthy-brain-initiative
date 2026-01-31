@@ -4,7 +4,7 @@
 
 // Firebase SDK imports (using CDN modules)
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, query, orderBy, limit, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, getDoc, doc, updateDoc, query, orderBy, limit, onSnapshot, where } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
 // Firebase configuration
@@ -169,10 +169,13 @@ export async function savePledgeToFirebase(pledgeData) {
 
 /**
  * Get total pledge count from Firestore
+ * Note: We query public pledges to comply with Firestore security rules
  */
 export async function getPledgeCount() {
     try {
-        const snapshot = await getDocs(pledgesCollection);
+        // Query public pledges (required by security rules)
+        const q = query(pledgesCollection, where('isPublic', '==', true));
+        const snapshot = await getDocs(q);
         return snapshot.size;
     } catch (error) {
         console.error('Error getting pledge count:', error);
@@ -208,9 +211,12 @@ export async function getPublicPledges(limitCount = 10) {
 
 /**
  * Subscribe to real-time pledge count updates
+ * Note: We query public pledges to comply with Firestore security rules
  */
 export function subscribeToPledgeCount(callback) {
-    return onSnapshot(pledgesCollection, (snapshot) => {
+    // Query public pledges (required by security rules)
+    const q = query(pledgesCollection, where('isPublic', '==', true));
+    return onSnapshot(q, (snapshot) => {
         callback(snapshot.size);
     }, (error) => {
         console.error('Error subscribing to pledges:', error);
