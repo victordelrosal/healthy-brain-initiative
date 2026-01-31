@@ -24,6 +24,9 @@
 
     <!-- Signature Pad Library -->
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <!-- Hero Section: Restructured with counter and community focus -->
@@ -461,13 +464,18 @@
                 <div id="pledge-success" class="pledge-success" style="display: none;">
 
                     <div class="success-message">
-                        <h3>You've joined <span id="updated-count">48</span> Newport families!</h3>
-                        <p>Thank you for protecting your child's developing brain.</p>
+                        <div class="success-celebration">
+                            <span class="celebration-emoji">🎉</span>
+                            <span class="celebration-emoji">👏</span>
+                            <span class="celebration-emoji">💚</span>
+                        </div>
+                        <h3 class="success-headline">Great decision!</h3>
+                        <p class="success-subhead">You've joined <span id="updated-count">48</span> Newport families protecting their children's futures.</p>
                     </div>
 
                     <!-- Social proof in success state -->
                     <div class="success-social-proof" id="success-social-proof">
-                        <p class="success-social-intro">You're now part of a growing community including:</p>
+                        <p class="success-social-intro">You're part of a growing movement:</p>
                         <div class="success-pledge-names" id="success-pledge-names">
                             <!-- Names loaded dynamically -->
                         </div>

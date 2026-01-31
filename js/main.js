@@ -347,7 +347,45 @@ async function showSuccessMessage(signatureSVG, userDisplayName) {
 
         // Scroll to success message
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Trigger confetti celebration!
+        launchConfetti();
     }
+}
+
+/**
+ * Launch celebratory confetti
+ */
+function launchConfetti() {
+    if (typeof confetti !== 'function') return;
+
+    // First burst - green confetti from left
+    confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { x: 0.2, y: 0.6 },
+        colors: ['#1a5f4a', '#2d6a4f', '#00b359', '#40c057', '#69db7c']
+    });
+
+    // Second burst - green confetti from right
+    setTimeout(() => {
+        confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { x: 0.8, y: 0.6 },
+            colors: ['#1a5f4a', '#2d6a4f', '#00b359', '#40c057', '#69db7c']
+        });
+    }, 150);
+
+    // Third burst - center celebration
+    setTimeout(() => {
+        confetti({
+            particleCount: 100,
+            spread: 100,
+            origin: { x: 0.5, y: 0.5 },
+            colors: ['#1a5f4a', '#2d6a4f', '#00b359', '#ffd700', '#ffffff']
+        });
+    }, 300);
 }
 
 /**
