@@ -1001,6 +1001,17 @@ blockquote {
     border: 1px solid var(--color-border-light);
 }
 
+/* Compact social proof inside pledge form */
+.social-proof-compact {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+}
+
+.social-proof-compact h4 {
+    font-size: 0.8rem;
+    margin-bottom: var(--spacing-sm);
+}
+
 .social-proof h4 {
     font-family: var(--font-body);
     font-size: 0.9rem;

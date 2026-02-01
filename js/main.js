@@ -663,7 +663,7 @@ async function loadPublicPledgeNames() {
     if (!container || !socialProofSection) return;
 
     try {
-        const pledges = await getPublicPledges(20);
+        const pledges = await getPublicPledges(10);
 
         if (pledges.length === 0) {
             // Hide section if no pledges yet
