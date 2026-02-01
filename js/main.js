@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCounters();
     initSmoothScroll();
     initNavScroll();
+    initPlaceholderRotation();
 
     // Subscribe to real-time pledge count updates
     initRealtimeCounter();
@@ -30,6 +31,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load public pledge names for social proof
     loadPublicPledgeNames();
 });
+
+/* ===========================
+   ROTATING PLACEHOLDER
+   =========================== */
+
+function initPlaceholderRotation() {
+    const nameInput = document.getElementById('parent-name');
+    if (!nameInput) return;
+
+    const placeholders = [
+        'e.g., Sarah Smith',
+        'e.g., John & Mary Murphy',
+        'e.g., David O\'Brien',
+        'e.g., Emma & Liam Kelly'
+    ];
+
+    let currentIndex = 0;
+
+    // Rotate placeholder every 3 seconds
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % placeholders.length;
+        nameInput.placeholder = placeholders[currentIndex];
+    }, 3000);
+}
 
 /* ===========================
    REALTIME COUNTER (Firebase)
