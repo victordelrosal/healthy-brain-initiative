@@ -425,16 +425,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group signature-group">
-                        <label>Your Signature</label>
-                        <p class="signature-instruction">Sign with your finger (mobile) or mouse (desktop) to confirm your commitment</p>
-                        <div class="signature-wrapper">
-                            <canvas id="signature-pad" class="signature-pad"></canvas>
-                            <div class="signature-line"></div>
-                        </div>
-                        <button type="button" id="clear-signature" class="btn btn-text">Clear and sign again</button>
-                    </div>
-
                     <div class="form-group privacy-group">
                         <label>How would you like to be listed?</label>
                         <div class="privacy-options">
@@ -455,7 +445,17 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-large">Sign the Commitment</button>
+                    <div class="form-group signature-group">
+                        <label>Your Signature</label>
+                        <p class="signature-instruction">Sign with your finger (mobile) or mouse (desktop) to confirm your pledge</p>
+                        <div class="signature-wrapper">
+                            <canvas id="signature-pad" class="signature-pad"></canvas>
+                            <div class="signature-line"></div>
+                        </div>
+                        <button type="button" id="clear-signature" class="btn btn-text">Clear and sign again</button>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large">Sign the Pledge</button>
 
                     <p class="form-note">Your signature is stored securely. Only aggregate numbers (not names) are displayed publicly.</p>
                 </form>
