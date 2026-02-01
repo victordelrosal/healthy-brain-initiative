@@ -1157,7 +1157,7 @@ blockquote {
 }
 
 .form-group {
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
 }
 
 .form-group label {
@@ -1186,9 +1186,9 @@ blockquote {
 /* Commitment Checkboxes */
 .commitment-section {
     background: var(--color-bg-alt);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-radius: var(--radius-md);
-    margin: var(--spacing-lg) 0;
+    margin: var(--spacing-sm) 0;
 }
 
 /* Single Commitment (simplified form) */
@@ -1200,7 +1200,7 @@ blockquote {
 .commitment-single .checkbox-primary {
     background: white;
     border: 2px solid var(--green-mid);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     border-radius: var(--radius-md);
     transition: all 0.4s ease;
 }
@@ -1219,9 +1219,9 @@ blockquote {
 }
 
 .commitment-note {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: var(--color-text-muted);
-    margin-top: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
     margin-bottom: 0;
     text-align: center;
 }
@@ -1268,20 +1268,25 @@ blockquote {
 
 /* Privacy Options */
 .privacy-group {
-    margin: var(--spacing-lg) 0;
+    margin: var(--spacing-sm) 0;
+}
+
+.privacy-group > label {
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-xs);
 }
 
 .privacy-options {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }
 
 .radio-label {
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-sm);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     background: var(--color-bg-alt);
     border: 2px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -1294,8 +1299,8 @@ blockquote {
 }
 
 .radio-label input[type="radio"] {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     margin-top: 2px;
     accent-color: var(--color-primary);
     flex-shrink: 0;
@@ -1314,48 +1319,49 @@ blockquote {
 .radio-content {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .radio-content strong {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--color-text);
 }
 
 .radio-description {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--color-text-muted);
-    line-height: 1.4;
+    line-height: 1.3;
 }
 
 /* Oath Section */
 .oath-section {
-    margin: var(--spacing-lg) 0;
+    margin: var(--spacing-sm) 0;
 }
 
 .oath-text {
     background: var(--color-bg-alt);
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--radius-md);
     border-left: 4px solid var(--color-primary);
     font-family: var(--font-heading);
     font-style: italic;
+    font-size: 0.9rem;
 }
 
 .oath-text p {
     margin-bottom: 0;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 /* Signature Pad */
 .signature-group {
-    margin-top: var(--spacing-lg);
+    margin-top: var(--spacing-sm);
 }
 
 .signature-instruction {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--color-text-muted);
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
 }
 
 .signature-wrapper {
@@ -1363,20 +1369,20 @@ blockquote {
     border: 2px solid var(--color-primary);
     border-radius: var(--radius-md);
     background: white;
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
     overflow: hidden;
 }
 
 .signature-pad {
     width: 100%;
-    height: 180px;
+    height: 140px;
     display: block;
     touch-action: none;
 }
 
 .signature-line {
     position: absolute;
-    bottom: 40px;
+    bottom: 30px;
     left: 20px;
     right: 20px;
     height: 1px;
@@ -1384,10 +1390,10 @@ blockquote {
 }
 
 .form-note {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     text-align: center;
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-sm);
 }
 
 /* Pledge Success */
@@ -2093,5 +2099,111 @@ blockquote {
 
     .section-intro {
         font-size: 1.25rem;
+    }
+}
+
+/* ===========================
+   MOBILE PLEDGE FORM - Compact Layout
+   Prevents scrolling that clears signature
+   =========================== */
+@media (max-width: 480px) {
+    .pledge-form-container {
+        padding: var(--spacing-md);
+    }
+
+    .pledge-form-container > p {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .form-group {
+        margin-bottom: var(--spacing-xs);
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        margin-bottom: 4px;
+    }
+
+    .form-group input[type="text"],
+    .form-group select {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.95rem;
+    }
+
+    .commitment-section {
+        padding: var(--spacing-xs);
+        margin: var(--spacing-xs) 0;
+    }
+
+    .commitment-single .checkbox-primary {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .commitment-note {
+        font-size: 0.75rem;
+        margin-top: 4px;
+    }
+
+    .oath-section {
+        margin: var(--spacing-xs) 0;
+    }
+
+    .oath-text {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.85rem;
+    }
+
+    .signature-group {
+        margin-top: var(--spacing-xs);
+    }
+
+    .signature-instruction {
+        font-size: 0.75rem;
+        margin-bottom: 4px;
+    }
+
+    .signature-pad {
+        height: 120px;
+    }
+
+    .signature-line {
+        bottom: 25px;
+    }
+
+    .btn-text {
+        font-size: 0.8rem;
+        padding: 4px 0;
+    }
+
+    .privacy-group {
+        margin: var(--spacing-xs) 0;
+    }
+
+    .privacy-group > label {
+        font-size: 0.85rem;
+    }
+
+    .radio-label {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .radio-content strong {
+        font-size: 0.85rem;
+    }
+
+    .radio-description {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+
+    .btn-large {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 1rem;
+    }
+
+    .form-note {
+        font-size: 0.7rem;
+        margin-top: var(--spacing-xs);
     }
 }

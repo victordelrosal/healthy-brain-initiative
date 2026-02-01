@@ -77,9 +77,15 @@ function initSignaturePad() {
     });
 
     // Handle canvas resize for responsive design
-    function resizeCanvas() {
+    function resizeCanvas(preserveSignature = false) {
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
         const rect = canvas.getBoundingClientRect();
+
+        // Save existing signature data if we want to preserve it
+        let signatureData = null;
+        if (preserveSignature && signaturePad && !signaturePad.isEmpty()) {
+            signatureData = signaturePad.toData();
+        }
 
         canvas.width = rect.width * ratio;
         canvas.height = rect.height * ratio;
@@ -87,18 +93,22 @@ function initSignaturePad() {
         const ctx = canvas.getContext('2d');
         ctx.scale(ratio, ratio);
 
-        // Clear the canvas on resize
-        signaturePad.clear();
+        // Restore signature or clear
+        if (signatureData) {
+            signaturePad.fromData(signatureData);
+        } else {
+            signaturePad.clear();
+        }
     }
 
-    // Initial resize
-    resizeCanvas();
+    // Initial resize (don't preserve since there's no signature yet)
+    resizeCanvas(false);
 
-    // Resize on window resize (debounced)
+    // Resize on window resize (debounced) - preserve signature if it exists
     let resizeTimeout;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(resizeCanvas, 200);
+        resizeTimeout = setTimeout(() => resizeCanvas(true), 200);
     });
 
     // Clear signature button
